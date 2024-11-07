@@ -45,17 +45,17 @@ function fillColour(colour) {
 }
 
 function drawRect(x, y, w, h, c) { // draws rectangle using ratios as setup in global variables
-  
+  let rms = analyser.getLevel();
   fillColour(c);
-  rect(x * rectWidth, windowHeight - y * rectHeight, w * rectWidth, h * rectHeight);
+  rect(x * rectWidth, windowHeight - y * rectHeight, w * rectWidth*rms*10, h * rectHeight*rms*10);
 }
 
 function drawFirstBuilding() {
   push();
 
   let movement1 = 0;//Buildings move with panning within the canvas
-  if(pan>0){//
-    movement1 = map(pan,0,1,0,3/4*windowWidth); 
+  if(pan>0){
+    movement1 = map(pan,0,1,0,3/4*windowWidth);
   }
   translate(movement1, 0);
 
