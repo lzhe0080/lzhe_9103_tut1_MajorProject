@@ -1,8 +1,9 @@
 # Major Project - The Pulse of the City
 
 ## Instructions
+Please put on your headphones.
 1. Move the mouse slowly across the screen and click the play button.
-2. Slowly move the mouse upwards to increase the volume until it’s audible.
+2. Slowly move the mouse upwards to increase the volume until it's audible.
 3. Slowly move the mouse left and right to switch channels, and move the mouse up and down to control the volume.
 4. Press pause if you need to stop the music.
 
