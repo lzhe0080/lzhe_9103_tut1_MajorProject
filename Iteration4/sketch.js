@@ -13,7 +13,7 @@ let red = [206, 29, 29];
 let blue = [21, 33, 173];
 let yellow = [255, 196, 31];
 
-let song,analyser;
+let song, analyser;
 // Start the volume at 1.0 (full volume) 
 let volume = 1.0;
 // Start the pan at 0.0 (centre)
@@ -22,7 +22,7 @@ let ampArray = [];
 
 let eye1 ,eye2, eye3, eye4;
 
-class Eye {
+class Eye { //I used ChatGPT to teach me how to build class
   constructor(x, y, size, color) {
   this.x = x;
   this.y = y;
@@ -38,11 +38,11 @@ class Eye {
   }
   
   display() {
-  stroke(0);
+  noStroke();
   fill(this.color); // Set color for the eye
-  ellipse(this.x, this.y, this.size / 4,this.currentSize);
+  ellipse(this.x, this.y, this.size / 4,this.currentSize);// Draw the eye as an oval
   fill(0);
-  ellipse(this.x, this.y, this.currentSize); // Draw the eye as an oval
+  ellipse(this.x, this.y, this.currentSize); //eyeball
   }
   }
 
@@ -74,15 +74,16 @@ function fillColour(colour) {
 function drawRect(x, y, w, h, c) { // draws rectangle using ratios as setup in global variables
   let rms = analyser.getLevel();
   fillColour(c);
-  //rect(x * rectWidth, windowHeight - y * rectHeight, w * rectWidth*rms*10, h * rectHeight*rms*10);
-  rect(x * rectWidth, windowHeight - y * rectHeight-rms*100, w * rectWidth, h * rectHeight+rms*100);
+  rect(x * rectWidth, windowHeight - y * rectHeight, w * rectWidth*rms*10, h * rectHeight*rms*10);
+  //The code below shows another version of interaction, in which the building only shakes slightly
+  //rect(x * rectWidth, windowHeight - y * rectHeight-rms*100, w * rectWidth, h * rectHeight+rms*100);
 }
 
 function drawFirstBuilding() {
   push();
 
   let movement1 = 0;//Buildings move with panning within the canvas
-  if(pan>0){
+  if(pan>0){ 
     movement1 = map(pan,0,1,0,3/4*windowWidth);
   }
   translate(movement1, 0);
@@ -405,6 +406,7 @@ function setup() {
 
   analyser = new p5.Amplitude();
   analyser.setInput(song);
+
   button = createButton("PLAY");
   button.style("background-color", color(206, 29, 29));
   button.position((windowWidth - button.width) / 2, windowHeight - button.height - 5);
@@ -414,9 +416,11 @@ function setup() {
 function draw() {
   background(220);
 
+  //draw the heartbeat curve of the city
   let r = analyser.getLevel();
   ampArray.push(r);
   stroke(206, 29, 29);
+  strokeWeight(2);
   noFill();
   beginShape();
   for (i=0; i<ampArray.length; i++){
@@ -424,7 +428,6 @@ function draw() {
     vertex(i,y);
   }
   endShape();
-
   if (ampArray.length > width) {
     ampArray.splice(0,1);
   }
