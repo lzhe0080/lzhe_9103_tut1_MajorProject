@@ -18,6 +18,33 @@ let song,analyser;
 let volume = 1.0;
 // Start the pan at 0.0 (centre)
 let pan = 0.0;
+let ampArray = []; 
+
+let eye1 ,eye2, eye3, eye4;
+
+class Eye {
+  constructor(x, y, size, color) {
+  this.x = x;
+  this.y = y;
+  this.size = size; // The max size or "open" size
+  this.currentSize = 0; // Initialize as closed
+  this.color = color;
+  }
+  
+  update() {
+  // Get the amplitude level and use it to set the eye's size
+  let level = analyser.getLevel();
+  this.currentSize = map(level, 0, 1, 0, this.size); // Map amplitude to eye size
+  }
+  
+  display() {
+  stroke(0);
+  fill(this.color); // Set color for the eye
+  ellipse(this.x, this.y, this.size / 4,this.currentSize);
+  fill(0);
+  ellipse(this.x, this.y, this.currentSize); // Draw the eye as an oval
+  }
+  }
 
 function preload(){
   song = loadSound('assets/TimeSquareMaxNeuhaus.mp3');
@@ -47,7 +74,8 @@ function fillColour(colour) {
 function drawRect(x, y, w, h, c) { // draws rectangle using ratios as setup in global variables
   let rms = analyser.getLevel();
   fillColour(c);
-  rect(x * rectWidth, windowHeight - y * rectHeight, w * rectWidth*rms*10, h * rectHeight*rms*10);
+  //rect(x * rectWidth, windowHeight - y * rectHeight, w * rectWidth*rms*10, h * rectHeight*rms*10);
+  rect(x * rectWidth, windowHeight - y * rectHeight-rms*100, w * rectWidth, h * rectHeight+rms*100);
 }
 
 function drawFirstBuilding() {
@@ -115,6 +143,10 @@ function drawFirstBuilding() {
   // Yellow floor
   drawRect(0, 2, 39, 2, "yellow");
 
+  eye1 = new Eye(windowWidth/16, windowHeight/4*3, 200,"#FFC41F");
+  eye1.update();
+  eye1.display();
+
   pop();
 }
 
@@ -181,6 +213,10 @@ function drawSecondBuilding() {
   drawRect(33, 24, 1, 20, "black");
   drawRect(0, 6, 19, 0.5, "black");
 
+  eye2 = new Eye(windowWidth/32*5, windowHeight/8*7, 300, "white");
+  eye2.update();
+  eye2.display();
+
   pop();
 }
 
@@ -245,6 +281,10 @@ function drawThirdBuilding() {
   // Yellow floor
   drawRect(0, 3, 40, 3, "yellow");
   
+  eye3 = new Eye(windowWidth/32*5, windowHeight/8*5, 350, "#CE1D1D");
+  eye3.update();
+  eye3.display();
+
   pop();
 }
 
@@ -338,11 +378,16 @@ function drawFourthBuilding() {
   drawRect(7, 43, 31, 1, "yellow");
   drawRect(21, 68, 1, 40, "yellow");
 
+  eye4 = new Eye(windowWidth/32*7, windowHeight/8*7, 350, "#1521AD");
+  eye4.update();
+  eye4.display();
+
   pop();
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
   noStroke();
 
   // Calculate the start positions and widths for the second, third, and fourth segments
@@ -368,7 +413,24 @@ function setup() {
 
 function draw() {
   background(220);
-  
+
+  let r = analyser.getLevel();
+  ampArray.push(r);
+  stroke(206, 29, 29);
+  noFill();
+  beginShape();
+  for (i=0; i<ampArray.length; i++){
+    y = map(ampArray[i],0,1,windowHeight/2,0);
+    vertex(i,y);
+  }
+  endShape();
+
+  if (ampArray.length > width) {
+    ampArray.splice(0,1);
+  }
+
+  noStroke();
+
   drawFirstBuilding();
   drawSecondBuilding();
   drawThirdBuilding();
